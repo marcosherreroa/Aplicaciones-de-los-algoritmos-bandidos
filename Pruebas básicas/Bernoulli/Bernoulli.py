@@ -41,8 +41,7 @@ def exploremtimes(n,machines,m):
         if val > bestVal:
             bestVal = val
             best = i
-    
-    print(best)    
+       
     while ind < n:
         chosen[ind] = best
         rwd = stats.sample(machines[chosen[ind]])
@@ -58,7 +57,6 @@ def computeCumRegret(n,testnum,probs,chosen):
     maxprob = max(probs)
     for j in range(n):
         for i in range(testnum):
-            #regret[j] += (maxprob - probs[chosen[i][j]])
             acum[i] += (maxprob - probs[chosen[i][j]])
             regret[j] += acum[i]
         
@@ -66,8 +64,6 @@ def computeCumRegret(n,testnum,probs,chosen):
     
     return regret
 
-#probs = [0.5 + i/20 for i in range(10)]   
-#machines = 10*[None]
 nmachines = 2
 probs = [0.2,0.7]
 machines = nmachines*[None]
@@ -98,6 +94,7 @@ regret = computeCumRegret(n,testnum,probs,chosen)
 plt.plot(regret,color='orange')
 
 
+
 for i in range(testnum):
     chosen[i], totalrwd[i] = exploremtimes(n,machines,4)
 
@@ -124,10 +121,10 @@ regret = computeCumRegret(n,testnum,probs,chosen)
 plt.plot(regret,color='brown')
 
 
-
+#plt.legend(['4 exploraciones','8 exploraciones','12 exploraciones','16 exploraciones'])
 plt.legend(['aleatorio','1 exploración','4 exploraciones','8 exploraciones','12 exploraciones','16 exploraciones'])
 plt.xlabel("Ronda")
-plt.ylabel("Regret acumulado")
+plt.ylabel("Remordimiento acumulado")
 fig = plt.gcf()
 fig.savefig("Bernoulli.pdf",format='pdf')
 plt.show()
