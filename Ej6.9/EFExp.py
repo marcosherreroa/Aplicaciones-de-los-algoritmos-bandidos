@@ -89,12 +89,12 @@ def plotDeltaRegret():
         else:
             C_EP2Min[i] = min(n*Delta,Delta+4/Delta*(1+max(0,math.log(n*Delta*Delta/4))))
         
-            C_EP3Min[i] = (Delta+math.sqrt(2)*math.exp(-1/2))*math.ceil(n**(2/3))
+        C_EP3Min[i] = (Delta+math.sqrt(2)*math.exp(-1/2))*math.ceil(n**(2/3))
     
     fig = plt.figure()
-    plt.plot(Deltas,regretmExpl,color='tab:red',label='EF (m=m_Expl)')
-    plt.plot(Deltas,regretmTeor, color='tab:green',label = 'EF (m = m_Teor)')
-    plt.plot(Deltas,regretmOpt, color='tab:blue', label = 'EF (m = m_Opt)')
+    plt.plot(Deltas,regretmExpl,color='tab:red',label='EP (m=m_Expl)')
+    plt.plot(Deltas,regretmTeor, color='tab:green',label = 'EP (m = m_Teor)')
+    plt.plot(Deltas,regretmOpt, color='tab:blue', label = 'EP (m = m_Opt)')
     plt.plot(Deltas,C_EP2Min,'--', color='tab:green',label= 'C_EP2_min')
     plt.plot(Deltas,C_EP3Min,'--',color='tab:red',label='C_EP3_min')
     plt.xlabel('∆')

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Ejercicio 7.8 de 
+Ejercicio 7.8 de Tor Lattimore
 Autor: Marcos Herrero
 """
 
