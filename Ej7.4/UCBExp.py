@@ -64,7 +64,7 @@ def samplePseudoRegretUCB(n,k,delta,arms,gaps):#cambiar a pseudo
 def plotDeltaRegret():
        
     n = 1000
-    sampleNum = 300
+    sampleNum = 600
     
     arms = 2*[None]
     arms[0] =  stats.norm(0,1)
@@ -134,12 +134,12 @@ def plotDeltaRegret():
         regretUCB[i] /= sampleNum
     
     fig = plt.figure()
-    plt.plot(Deltas,regretEF25, color='tab:blue',label= 'EF (m=25)')
-    plt.plot(Deltas,regretEF50, color='tab:green',label = 'EF (m=50)')
-    plt.plot(Deltas,regretEF75, color='tab:olive',label = 'EF (m=75)')
-    plt.plot(Deltas,regretEF100, color='tab:red', label = 'EF (m=100)')
-    plt.plot(Deltas,regretEFmTeor, color='tab:purple',label = 'EF (m=m_Teor)')
-    plt.plot(Deltas,regretEFOptimo, color='tab:gray', label = 'EF (m=m_Opt)')
+    plt.plot(Deltas,regretEF25, color='tab:blue',label= 'EP (m = 25)')
+    plt.plot(Deltas,regretEF50, color='tab:green',label = 'EP (m = 50)')
+    plt.plot(Deltas,regretEF75, color='tab:olive',label = 'EP (m = 75)')
+    plt.plot(Deltas,regretEF100, color='tab:red', label = 'EP (m = 100)')
+    plt.plot(Deltas,regretEFmTeor, color='tab:purple',label = 'EP (m = m_Teor)')
+    plt.plot(Deltas,regretEFOptimo, color='tab:gray', label = 'EP (m = m_Opt)')
     plt.plot(Deltas,regretUCB, color='black', label = 'UCB')
     plt.xlabel('∆')
     plt.ylabel('Remordimiento esperado')
@@ -155,7 +155,103 @@ def plotDeltaRegret():
     plt.legend(loc='upper left')
     fig.savefig('ms.pdf',format='pdf')
     plt.show()
+ 
+def plotDeltaRegret2():
+    
+    n = 1000
+    sampleNum = 600
+    
+    arms = 2*[None]
+    arms[0] =  stats.norm(0,1)
+    gaps = 2*[0]
+    
+    nDeltas = 20
+    Deltas = np.linspace(0,1,nDeltas)
+    regretEF25 = np.empty(nDeltas)
+    regretEF100 = np.empty(nDeltas)
+    regretEFOptimo = np.empty(nDeltas)
+    
+    regretUCB0 = np.empty(nDeltas)
+    regretUCB2 = np.empty(nDeltas)
+    regretUCB4 = np.empty(nDeltas)
+    regretUCB6 = np.empty(nDeltas)
+    regretUCB8 = np.empty(nDeltas)
+
+    mOpt = nDeltas*[0]
+    
+    for i in range(nDeltas):
+        Delta = Deltas[i]
+        
+        arms[1]= stats.norm(-Delta,1)
+        gaps[1] = Delta
+        
+        regretEF25[i] = 0
+        for k in range(sampleNum):
+            regretEF25[i] += samplePseudoRegretEF(n,2,25,arms,gaps)
+        
+        regretEF25[i] /= sampleNum
+        
+        
+        regretEF100[i] = 0
+        for k in range(sampleNum):
+            regretEF100[i] += samplePseudoRegretEF(n,2,100,arms,gaps)
+        
+        regretEF100[i] /= sampleNum
+        
+        
+        regretEFOptimo[i] = 0
+        mOpt[i] = computemOpt(n,Delta) 
+        for k in range(sampleNum):
+            regretEFOptimo[i] += samplePseudoRegretEF(n,2,mOpt[i],arms,gaps)
+        
+        regretEFOptimo[i] /= sampleNum
+        
+        regretUCB0[i] = 0
+        for k in range(sampleNum):
+            regretUCB0[i] += samplePseudoRegretUCB(n,2,1,arms,gaps)
+        
+        regretUCB0[i] /= sampleNum
+        
+        regretUCB2[i] = 0
+        for k in range(sampleNum):
+            regretUCB2[i] += samplePseudoRegretUCB(n,2,1/100,arms,gaps)
+        
+        regretUCB2[i] /= sampleNum
+        
+        regretUCB4[i] = 0
+        for k in range(sampleNum):
+            regretUCB4[i] += samplePseudoRegretUCB(n,2,1/10000,arms,gaps)
+        
+        regretUCB4[i] /= sampleNum
+        
+        regretUCB6[i] = 0
+        for k in range(sampleNum):
+            regretUCB6[i] += samplePseudoRegretUCB(n,2,1/(n*n),arms,gaps)
+        
+        regretUCB6[i] /= sampleNum
+        
+        regretUCB8[i] = 0
+        for k in range(sampleNum):
+            regretUCB8[i] += samplePseudoRegretUCB(n,2,1/(10**8),arms,gaps)
+        
+        regretUCB8[i] /= sampleNum
+    
+    fig = plt.figure()
+    plt.plot(Deltas,regretEF25, color='tab:blue',label= 'EP (m = 25)')
+    plt.plot(Deltas,regretEF100, color='tab:red', label = 'EP (m = 100)')
+    plt.plot(Deltas,regretEFOptimo, color='tab:gray', label = 'EP (m = m_Opt)')
+    plt.plot(Deltas,regretUCB0, color='salmon', label = 'UCB (δ = 1)')
+    plt.plot(Deltas,regretUCB2, color='gold', label = 'UCB (δ = 1/100)')
+    plt.plot(Deltas,regretUCB4, color='mediumspringgreen', label = 'UCB (δ = 1/10⁴)')
+    plt.plot(Deltas,regretUCB6, color='black', label = 'UCB (δ = 1/10⁶)')
+    plt.plot(Deltas,regretUCB8, color='indigo', label = 'UCB (δ = 1/10⁸)')
+    plt.xlabel('∆')
+    plt.ylabel('Remordimiento esperado')
+    plt.legend(loc='upper left',ncol = 2)
+    fig.savefig('UCBDeltaRegret2.pdf',format='pdf')
+    plt.show()
     
 
 plotDeltaRegret()
+#plotDeltaRegret2()
 

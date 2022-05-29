@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Aplicaciones de los algoritmos de bandidos. Autor: Marcos Herrero
-Exlora-Primero
-Impacto de deltas pequeños en la cota del remordimiento
+Impacto Delta grande
+Sección 7
+Autor: Marcos Herrero
 """
 
 import math
@@ -11,12 +11,13 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+
 def computemTeor(n,Delta):
     if Delta == 0:
         return 0
     else :
         return max(1,math.ceil(4/(Delta*Delta)*math.log(n*Delta*Delta/4)))
-    
 
 def samplePseudoRegretRandomChoice(n,k,arms,gaps):
     regret = 0
@@ -38,7 +39,7 @@ def samplePseudoRegretEF(n,k,m,arms,gaps):
     
     return m*sum(gaps)+(n-m*k)*gaps[bestarm]
 
-n = 2000
+n = 500
 samplenum = 500
 
 arms = [None,None]
@@ -46,14 +47,14 @@ arms[1] = stats.uniform(0,1)
 gaps = [0,0]
 
 nDeltas = 100
-invDeltas = np.arange(2,2+nDeltas)
+Deltas = np.linspace(0,0.5,nDeltas)
 regretRandom = np.zeros(nDeltas)
 regretEF = np.zeros(nDeltas)
 Ctrivial = np.empty(nDeltas) # n*Delta
 C_EP2Min2arg = np.empty(nDeltas) # Delta + 4/Delta*max(...)
 
 for i in range(nDeltas):
-    Delta = 1/(invDeltas[i])
+    Delta = Deltas[i]
     
     arms[0] = stats.uniform(0,1+2*Delta)
     gaps[1] = Delta
@@ -78,24 +79,24 @@ for i in range(nDeltas):
         
 
 fig = plt.figure()
-plt.plot(invDeltas,regretRandom,color =  'tab:green',label='Elección aleatoria')
-plt.plot(invDeltas,regretEF, color = 'tab:blue', label='EP (m = m_Teor)')
-plt.plot(invDeltas,C_EP2Min2arg,'--', color = 'tab:blue',label='C_2arg')
-plt.plot(invDeltas,Ctrivial,'--',color = 'tab:red',label ='n∆')
-plt.xlabel('1/∆')
+plt.plot(Deltas,regretRandom,color =  'tab:green',label='Elección aleatoria')
+plt.plot(Deltas,regretEF, color = 'tab:blue', label='EP (m = m_Teor)')
+plt.plot(Deltas,C_EP2Min2arg,'--', color = 'tab:blue',label='C_2arg')
+plt.plot(Deltas,Ctrivial,'--',color = 'tab:red',label ='n∆')
+plt.xlabel('∆')
 plt.ylabel('Remordimiento esperado')
 plt.legend(loc='upper left')
-fig.savefig('ImpactoDelta3.pdf',format='pdf')
+fig.savefig('ImpactoDeltaGrande1.pdf',format='pdf')
 plt.show()
 
 fig = plt.figure()
-plt.plot(invDeltas[20:],regretRandom[20:],color =  'tab:green',label='Elección aleatoria')
-plt.plot(invDeltas[20:],regretEF[20:], color = 'tab:blue', label='EP (m = m_Teor)')
-#plt.plot(invDeltas[20:],C_EP2Min2arg[20:],'--', color = 'tab:blue',label='C_2arg')
-plt.plot(invDeltas[20:],Ctrivial[20:],'--',color = 'tab:red',label ='n∆')
-plt.xlabel('1/∆')
+plt.plot(Deltas,regretRandom,color =  'tab:green',label='Elección aleatoria')
+plt.plot(Deltas,regretEF, color = 'tab:blue', label='EP (m = m_Teor)')
+plt.plot(Deltas,C_EP2Min2arg,'--', color = 'tab:blue',label='C_2arg')
+plt.plot(Deltas,Ctrivial,'--',color = 'tab:red',label ='n∆')
+plt.xlabel('∆')
 plt.ylabel('Remordimiento esperado')
-#plt.ylim(0,20)
+plt.ylim(0,100)
 plt.legend(loc='upper left')
-fig.savefig('ImpactoDelta4.pdf',format='pdf')
+fig.savefig('ImpactoDeltaGrande2.pdf',format='pdf')
 plt.show()

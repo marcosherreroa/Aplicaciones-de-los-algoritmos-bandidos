@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Experimento ETC
+Experimento Explora-Primero
 Autor : Marcos Herrero
 """
 
@@ -91,6 +91,7 @@ def plotDeltaRegret():
         
         C_EP3Min[i] = (Delta+math.sqrt(2)*math.exp(-1/2))*math.ceil(n**(2/3))
     
+ 
     fig = plt.figure()
     plt.plot(Deltas,regretmExpl,color='tab:red',label='EP (m=m_Expl)')
     plt.plot(Deltas,regretmTeor, color='tab:green',label = 'EP (m = m_Teor)')
@@ -121,8 +122,8 @@ def plotmRegretAndVar():
     sampleNum = 600
     
     arms = 2*[None]
-    arms[0] = stats.Normal('X0',0,1)
-    arms[1] = stats.Normal('X1',-Delta,1)
+    arms[0] = stats.norm(0,1)
+    arms[1] = stats.norm(-Delta,1)
     gaps = 2*[0]
     gaps[1] = Delta
     
